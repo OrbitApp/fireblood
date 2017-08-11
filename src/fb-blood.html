@@ -9,30 +9,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="fb-table.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="fb-home">
+<dom-module id="fb-blood">
   <template>
     <style include="shared-styles">
-      :host {
+       :host {
         display: block;
         padding: 10px;
+      }
+      .card{
+        max-width: 860px;
+        margin: 24px auto;
       }
     </style>
 
     <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+      <ls-table header="I nid blood" description="but i am not vampire" table-header="{{header}}" data="{{data}}" action="{{action}}"></ls-table>
     </div>
   </template>
 
   <script>
-    class MyView1 extends Polymer.Element {
-      static get is() { return 'my-view1'; }
+    class FbBlood extends Polymer.Element {
+      static get is() { return 'fb-blood'; }
+
+      ready() {
+        super.ready();
+
+        this.set('header', [{ title: 'Name', id: 'name' }, { title: 'Icon', id: 'icon' }, { title: 'League', id: 'league_text' }, { title: 'Created At', id: 'created_at' }, { title: 'Updated At', id: 'updated_at' }]);
+      }
     }
 
-    window.customElements.define(MyView1.is, MyView1);
+    window.customElements.define(FbBlood.is, FbBlood);
   </script>
 </dom-module>

@@ -1,0 +1,25 @@
+{
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "hosting": {
+    "public": "build/es6-unbundled",
+    "headers": [{
+      "source": "/",
+      "headers": [{
+        "key" : "Cache-Control",
+        "value": "max-age=0"
+      }]
+    }],    
+    "rewrites": [
+      {
+        "source": "!/__/**",
+        "destination": "/index.html"
+      },
+      {
+        "source": "**/!(*.js|*.html|*.css|*.json|*.svg|*.png|*.jpg|*.jpeg)",
+        "destination": "/index.html"
+      }
+    ]    
+  }
+}

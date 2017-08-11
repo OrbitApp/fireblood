@@ -9,6 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="fb-form.html">
 
@@ -23,10 +24,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin: 24px auto;
         max-width: 640px;
       }
+      paper-button{
+        padding: 0.5em 0.8em;
+      }
+      .submit{
+        font-weight: 500;
+        color: white;
+        background: var(--app-primary-color);
+      }
     </style>
 
     <div class="card form">
-      <fb-form header="Request" form-input="{{forminput}}"></fb-form>
+      <fb-form header="Blood Request" description="{{description}}" form-input="{{forminput}}">
+        <div>
+          <paper-button class="submit" raised>Request</paper-button>
+          <paper-button>Cancel</paper-button>
+        </div>
+      </fb-form>
     </div>
   </template>
 
@@ -36,6 +50,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready() {
         super.ready();
+
+        this.set('description', "write something here")
 
         this.set('forminput', [{
           type: 'text',

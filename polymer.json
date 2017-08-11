@@ -1,11 +1,17 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/my-app.html",
+  "shell": "src/fb-app.html",
   "fragments": [
-    "src/my-view1.html",
-    "src/my-view2.html",
-    "src/my-view3.html",
-    "src/my-view404.html"
+    "src/fb-blood.html",
+    "src/fb-form.html",
+    "src/fb-history.html",
+    "src/fb-home.html",
+    "src/fb-hospital.html",
+    "src/fb-landing.html",
+    "src/fb-request.html",
+    "src/fb-settings.html",
+    "src/fb-table.html",
+    "src/fb-welcome.html"
   ],
   "sources": [
     "src/**/*",
@@ -20,12 +26,6 @@
     "rules": ["polymer-2"]
   },
   "builds": [
-    {
-      "preset": "es5-bundled"
-    },
-    {
-      "preset": "es6-bundled"
-    },
     {
       "preset": "es6-unbundled"
     }

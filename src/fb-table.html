@@ -1,0 +1,169 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="ls-table">
+  <template>
+    <style include="shared-styles">
+       :host {
+        display: block;
+      }
+
+
+      .title {
+        width: 100%;
+        color: #212121;
+        margin: 4px;
+        font-size: 22px;
+        font-weight: 400;
+      }
+
+      .subtitle {
+        margin: 8px 4px;
+        font-size: 15px;
+      }
+
+      .container {
+        overflow-x: auto;
+      }
+
+      table {
+        margin: 8px 0;
+        width: 100%;
+        border-spacing: 0;
+      }
+
+      thead tr th {
+        font-weight: 500;
+        padding: 10px 10px 10px 0;
+        text-align: left;
+        border-bottom: 1px solid #eeeeee;
+        color: #ffb946;
+        white-space: nowrap;
+      }
+
+      tbody tr {
+        background-color: transparent;
+        transition: background-color 50ms ease-in-out;
+        white-space: nowrap;
+      }
+
+      tbody tr:hover {
+        cursor: pointer;
+        background-color: #F5F5F5;
+      }
+
+      tbody tr td {
+        font-size: 14px;
+        padding: 10px 10px 10px 0;
+        border-bottom: 1px solid #eeeeee;
+      }
+
+      tbody tr:last-of-type td {
+        border-bottom: 1px solid transparent;
+      }
+
+      .action {
+        display: block;
+        margin-right: 8px;
+        text-decoration: none;
+        color: #4d94eb
+      }
+
+      .action:hover {
+        font-weight: 500;
+      }
+    </style>
+
+    <div class="header">
+      <div class="title">{{header}}</div>
+      <div class="subtitle">{{description}}</div>
+    </div>
+
+    <div class="container">
+      <table>
+        <thead>
+          <tr>
+            <!--Coz Polymer 2.0 sucks, <dom-repeat> doesn't works with table-->
+            <template is="dom-repeat" items="{{tableHeader}}">
+              <th>{{item.title}}</th>
+            </template>
+            <template is="dom-if" if="{{action}}">
+              <th style="display: flex">Action</th>
+            </template>
+          </tr>
+        </thead>
+        <tbody>
+          <template is="dom-repeat" items="{{data}}" as="data" initial-count="10">
+            <tr>
+              <template is="dom-repeat" items="{{tableHeader}}" as="tableHeader">
+                <td>{{_compute(data, tableHeader.id)}}</td>
+              </template>
+              <template is="dom-if" if="{{action}}">
+                <td style="display: flex">
+                  <dom-repeat items="{{action}}" as="action">
+                    <template>
+                      <dom-if if="{{_isView(action.id)}}">
+                        <template>
+                          <a class="action" href="{{action.url}}/{{data.id}}/">View</a>
+                        </template>
+                      </dom-if>
+                      <dom-if if="{{_isDelete(action.id)}}">
+                        <template>
+                          <div class="action" on-tap="delete" items="{{data}}">{{action.text}}</div>
+                        </template>
+                      </dom-if>
+                    </template>
+                  </dom-repeat>
+                </td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+  </template>
+
+  <script>
+    class LsTable extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'ls-table'; }
+      static get properties() {
+        return {
+          header: String,
+          button: String,
+          tableHeader: Object,
+          data: Object,
+          action: Object,
+          description: String
+        }
+      }
+
+      _compute(data, tableHeader) {
+        return data[tableHeader];
+      }
+
+      _isAction(type) {
+        if (type == 'action') return true;
+      }
+
+      _isDelete(action) {
+        if (action == 'delete') return true;
+      }
+
+      _isView(action) {
+        if (action == 'view') return true;
+      }
+
+      ready() {
+        super.ready();
+      }
+
+      delete(e) {
+        this.dispatchEvent(new CustomEvent('delete', { detail: e.target.items }));
+      }
+    }
+
+    window.customElements.define(LsTable.is, LsTable);
+  </script>
+</dom-module>

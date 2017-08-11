@@ -12,16 +12,16 @@
             }
 
             .title{
+                width: 100%;
                 color: #212121;
                 margin: 4px;
-                font-size: 20px;
+                font-size: 22px;
                 font-weight: 400;
             }
 
-            .header {
-                justify-content: space-between;
-                display: flex;
-                align-items: center;
+            .subtitle{
+                margin: 8px 4px;
+                font-size: 15px;
             }
 
             form {
@@ -89,6 +89,7 @@
 
         <div class="header">
             <div class="title">{{header}}</div>
+            <div class="subtitle">{{description}}</div>
         </div>
 
         <slot name="top_text"></slot>
@@ -99,7 +100,7 @@
                     <template>
                         <dom-if if="{{_isType(item.type)}}">
                             <template>
-                                <paper-input label="{{item.label}}" type="{{item.type}}" id="{{item.name}}" placeholder="{{item.placeholder}}" name="{{item.name}}"></paper-input>
+                                <paper-input label="{{item.label}}" type="{{item.type}}" id="{{item.name}}" placeholder="{{item.placeholder}}" name="{{item.name}}" value="{{item.value}}"></paper-input>
                             </template>
                         </dom-if>
                         <dom-if if="{{_isDropdown(item.type)}}">
@@ -183,6 +184,7 @@
                 return {
                     header: String,
                     button: String,
+                    description: String,
                     formInput: {
                         type: Object,
                         notify: true

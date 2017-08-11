@@ -67,6 +67,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .login paper-button.facebook {
         background: #32508E;
       }
+
+      @media screen and (max-width: 860px){
+        .container{
+
+        }
+      }
     </style>
 
 
@@ -77,16 +83,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="card login">
         <h2>Login</h2>
         <div class="button-container">
-          <a href="/hospital"><paper-button class="google">Sign In with Google</paper-button></a>
+          <paper-button class="google" on-tap="google_login">Sign In with Google</paper-button>
           <paper-button class="facebook">Sign In with Facebook</paper-button>
-
         </div>
       </div>
   </template>
 
   <script>
-    class FbHome extends Polymer.Element {
+    class FbHome extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'fb-home'; }
+
+      google_login() {
+        var provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider).then(result => {
+          window.history.pushState({}, null, '/settings');
+          window.dispatchEvent(new CustomEvent('location-changed'));
+        })
+        .catch(error => {
+          console.log('error')
+        })
+      }
     }
 
     window.customElements.define(FbHome.is, FbHome);
