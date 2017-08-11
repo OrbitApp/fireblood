@@ -110,6 +110,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <fb-welcome name="welcome"></fb-welcome>
           <fb-request name="request"></fb-request>
           <fb-settings name="settings"></fb-settings>
+          <fb-admin name="admin"></fb-admin>
           <fb-view404 name="view404"></fb-view404>
         </iron-pages>
       </app-header-layout>
@@ -155,7 +156,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
         firebase.initializeApp(config);
 
-      }
+        const messaging = firebase.messaging();
+
+        console.log(messaging)
+
+        firebase.auth().onAuthStateChanged(user => {
+          if (user) {
+          messaging.requestPermission()
+            .then(() => {
+              console.log('Notification permission granted.');
+              messaging.getToken()
+              .then(currentToken => {
+                if (currentToken) {
+                  //console.log(user.uid)
+                  firebase.database().ref('/notification/' + user.uid + '/notification_id').set(currentToken)
+                  //...
+                }
+                else{
+                  //...
+                }
+              })
+            })
+            .catch(err => {
+              console.log('Unable to get permission to notify.', err);
+            });
+          }
+        })
+      }   
 
       logout() {
         firebase.auth().signOut().then(_ => {

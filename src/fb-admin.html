@@ -1,0 +1,160 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="fb-form.html">
+
+<dom-module id="fb-admin">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+                padding: 10px;
+            }
+
+            .card.form {
+                margin: 24px auto;
+                max-width: 640px;
+            }
+
+            paper-button {
+                padding: 0.5em 0.8em;
+            }
+
+            .submit {
+                font-weight: 500;
+                color: white;
+                background: var(--app-primary-color);
+            }
+        </style>
+
+        <iron-ajax method="POST" id="request" handle-as="json" url="" content-type="application/json"></iron-ajax>
+
+        <div class="card form">
+            <fb-form id="form" header="Admin - Push Notification" form-input="{{forminput}}">
+                <div>
+                    <paper-button class="submit" on-tap="pushNotification" raised>PUSH</paper-button>
+                    <paper-button class="submit" on-tap="subscribe" raised>Subscribe</paper-button>
+                    <paper-button>Cancel</paper-button>
+                </div>
+            </fb-form>
+        </div>
+    </template>
+
+    <script>
+        class FbAdmin extends Polymer.GestureEventListeners(Polymer.Element) {
+            static get is() { return 'fb-admin'; }
+
+            subscribe() {
+                const messaging = firebase.messaging();
+                messaging.getToken()
+                    .then(token => {
+                        if (token) {
+                            // var topic = 'test'
+                            // fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
+                            //     method: 'POST',
+                            //     headers: new Headers({
+                            //         'Authorization': 'key=AAAAEejQtwY:APA91bEN9fmcaBFI3pJRSFfyCN6aDKcMXzgg7wPGiVDcVfs2CPsRWtuNpu4QYZmBUUiMRIYT9V821zcxdJ7y_DcsC5EWDU0w5xs4u8qBP5AQBIbAtIHbIWx6GUJLSSVRn1xd0STW2G2j'
+                            //     })
+                            // }).then(response => {
+                            //     if (response.status < 200 || response.status >= 400) {
+                            //         throw 'Error subscribing to topic: ' + response.status + ' - ' + response.text();
+                            //     }
+                            //     console.log('Subscribed to "' + topic + '"');
+                            // }).catch(error => {
+                            //     console.error(error);
+                            // })
+                        }
+                    })
+            }
+
+            pushNotification() {
+                var form = this.$.form.submitForm();
+                if (form) {
+                    form.date = new Date(form.date + " " + form.time).getTime() / 1000;
+                    delete form.time;
+                    
+                    this.$.request.url = "http://localhost:5000/mydd-d1223/us-central1/sendMessage";
+                    this.$.request.method = 'GET'
+                    this.$.request.params = form
+                    var r = this.$.request.generateRequest();
+                    Promise.all([r.completes]).then(requests => {
+                        alert('i think ok liao');
+                    })
+                }
+            }
+
+            ready() {
+                super.ready();
+
+                var blood_group = [
+                    {
+                        id: 'op',
+                        name: 'O+'
+                    }, {
+                        id: 'om',
+                        name: 'O-'
+                    }, {
+                        id: 'ap',
+                        name: 'A+'
+                    }, {
+                        id: 'am',
+                        name: 'A-'
+                    }, {
+                        id: 'bp',
+                        name: 'B+'
+                    }, {
+                        id: 'bm',
+                        name: 'B-'
+                    }, {
+                        id: 'abp',
+                        name: 'AB+'
+                    }, {
+                        id: 'abm',
+                        name: 'AB-'
+                    }
+                ]
+
+                var location = [{ "id": 1, "name": "Beacon Hospital", "address": "No. 1, Jalan 215, Section 51, Off Jalan Templer Petaling Jaya Selangor 46050 Malaysia, Malaysia" }, { "id": 2, "name": "KPJ Sentosa KL Specialist Hospital", "address": "36, Jalan Chemur Kompleks Damai Kuala Lumpur WP Kuala Lumpur 60400 Malaysia, Malaysia" }, { "id": 3, "name": "Hospital Fatimah", "address": "1 Lebuh Chew Peng Loon Off Jalan Dato’ Lau Pak Khuan Ipoh Garden Ipoh Perak 31400 Malaysia, Malaysia" }, { "id": 4, "name": "Manipal Hospitals Klang", "address": "Lot 83211,, Persiaran Batu Nilam, Bandar Bukit Tinggi, 41200 Klang, Selangor, Malaysia" }, { "id": 5, "name": "Pantai Hospital Ipoh", "address": "126, Jalan Tambun Ipoh Perak 31400 Malaysia, Malaysia" }, { "id": 6, "name": "Gleneagles Kuala Lumpur", "address": "Block A \u0026 Block B, 286 \u0026 288, Jalan Ampang, 50450 Kuala Lumpur, Federal Territory of Kuala Lumpur, Malaysia" }]
+
+                this.set('forminput', [{
+                    type: 'text',
+                    name: 'topic',
+                    label: 'Topic',
+                    placeholder: ''
+                }, {
+                    type: 'dropdown',
+                    name: 'location',
+                    label: 'Location',
+                    dropdown: location
+                }, {
+                    type: 'date',
+                    name: 'date',
+                    label: 'Date',
+                    placeholder: ''
+                }, {
+                    type: 'time',
+                    name: 'time',
+                    label: 'Time',
+                    placeholder: ''
+                }, {
+                    type: 'dropdown',
+                    name: 'blood',
+                    label: 'Blood Group',
+                    dropdown: blood_group
+                }])
+            }
+        }
+
+        window.customElements.define(FbAdmin.is, FbAdmin);
+    </script>
+</dom-module>

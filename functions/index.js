@@ -8,15 +8,16 @@ admin.initializeApp(functions.config().firebase);
 //
 exports.sendMessage = functions.https.onRequest((request, response) => {
     // The topic name can be optionally prefixed with "/topics/".
-    let topic = request.body.topic;
+
+    let topic = request.query.topic;
 
 // See the "Defining the message payload" section below for details
 // on how to define a message payload.
     let payload = {
         data: {
-            location: request.body.location,
-            blood: request.body.blood,
-            date: request.body.date
+            location: request.query.location,
+            blood: request.query.blood,
+            date: request.query.date
         }
     };
     admin.messaging().sendToTopic(topic, payload)
@@ -28,5 +29,6 @@ exports.sendMessage = functions.https.onRequest((request, response) => {
         .catch(function(error) {
             console.log("Error sending message:", error);
         });
+        
     response.send("Hello from Firebase!");
 });

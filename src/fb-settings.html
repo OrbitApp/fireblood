@@ -188,12 +188,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 type: 'number',
                 name: 'age',
                 label: 'Age',
-                placeholder: ''
+                placeholder: '',
+                value: 21
               }, {
                 type: 'tel',
                 name: 'telephone',
                 label: 'Telephone',
-                placeholder: ''
+                placeholder: '',
+                value: '+14159641808'
               }, {
                 type: 'dropdown',
                 name: 'blood_group',
@@ -225,14 +227,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.set('notification_forminput', [{
               type: 'dropdown',
               name: 'blood_group',
-              label: 'Get notification when x blood group is out of stock',
+              label: 'Select a blood group to receive notifications for',
               placeholder: '',
               dropdown: noti_bg
             }])
-          }
-          else {
-            window.history.pushState({}, null, '/home');
-            window.dispatchEvent(new CustomEvent('location-changed'));
           }
         })
       }
