@@ -85,9 +85,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="[[rootPath]]view1">View One</a>
-          <a name="view2" href="[[rootPath]]view2">View Two</a>
-          <a name="view3" href="[[rootPath]]view3">View Three</a>
+          <a name="home" href="[[rootPath]]home">Home</a>
+          <a name="landing" href="[[rootPath]]landing">Landing</a>
+          <a name="blood" href="[[rootPath]]blood">Blood</a>
+          <a name="history" href="[[rootPath]]history">History</a>
+          <a name="hospital" href="[[rootPath]]hospital">Hospital</a>
+          <a name="welcome" href="[[rootPath]]welcome">Welcome</a>
+          <a name="request" href="[[rootPath]]request">Request</a>
+          <a name="settings" href="[[rootPath]]settings">Settings</a>
         </iron-selector>
       </app-drawer>
 
@@ -96,7 +101,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <app-header slot="header" condenses reveals effects="waterfall">
           <app-toolbar>
-            <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
+            <paper-icon-button icon="fb-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Fireblood</div>
           </app-toolbar>
         </app-header>
@@ -113,6 +118,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <fb-hospital name="hospital"></fb-hospital>
           <fb-welcome name="welcome"></fb-welcome>
           <fb-request name="request"></fb-request>
+          <fb-settings name="settings"></fb-settings>
           <fb-view404 name="view404"></fb-view404>
         </iron-pages>
       </app-header-layout>

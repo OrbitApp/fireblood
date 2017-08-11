@@ -10,29 +10,60 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="fb-form.html">
 
-<dom-module id="fb-home">
+<dom-module id="fb-request">
   <template>
     <style include="shared-styles">
       :host {
         display: block;
         padding: 10px;
       }
+      .card.form{
+        margin: 24px auto;
+        max-width: 640px;
+      }
     </style>
 
-    <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+    <div class="card form">
+      <fb-form header="Request" form-input="{{forminput}}"></fb-form>
     </div>
   </template>
 
   <script>
-    class MyView1 extends Polymer.Element {
-      static get is() { return 'my-view1'; }
+    class FbRequest extends Polymer.Element {
+      static get is() { return 'fb-request'; }
+
+      ready() {
+        super.ready();
+
+        this.set('forminput', [{
+          type: 'text',
+          name: 'hospital',
+          label: 'Hospital',
+          placeholder: ''
+        },{
+          type: 'number',
+          name: 'age',
+          label: 'Age',
+          placeholder: ''
+        },{
+          type: 'dropdown',
+          name: 'blood_type',
+          label: 'Blood Type',
+          placeholder: '',
+          dropdown: [{
+            id: 'a',
+            name: 'A'
+          },
+          {
+            id: 'b',
+            name: 'B'
+          }]
+        }])
+      }
     }
 
-    window.customElements.define(MyView1.is, MyView1);
+    window.customElements.define(FbRequest.is, FbRequest);
   </script>
 </dom-module>

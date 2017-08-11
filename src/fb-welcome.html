@@ -11,28 +11,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="fb-home">
+<dom-module id="fb-welcome">
   <template>
     <style include="shared-styles">
-      :host {
+       :host {
         display: block;
         padding: 10px;
       }
     </style>
 
-    <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
-    </div>
   </template>
 
   <script>
-    class MyView1 extends Polymer.Element {
-      static get is() { return 'my-view1'; }
+    class FbWelcome extends Polymer.Element {
+      static get is() { return 'fb-welcome'; }
     }
 
-    window.customElements.define(MyView1.is, MyView1);
+    window.customElements.define(FbWelcome.is, FbWelcome);
   </script>
 </dom-module>

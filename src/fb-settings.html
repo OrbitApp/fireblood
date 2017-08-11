@@ -1,0 +1,235 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="fb-form.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="fb-settings">
+  <template>
+    <style include="shared-styles">
+       :host {
+        display: block;
+      }
+
+      .cover {
+        height: 164px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        background: var(--app-primary-color);
+      }
+
+      .profile_pic {
+        margin-bottom: -82px;
+        width: 164px;
+        height: 164px;
+        border-radius: 50%;
+        background-size: cover;
+        border: 3px solid white;
+      }
+
+      .type {
+        width: 42px;
+        height: 42px;
+        color: white;
+        background: var(--app-primary-color);
+        border: 3px solid white;
+        display: flex;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        margin-top: 68px;
+        margin-left: 68px;
+        font-weight: 600;
+      }
+
+      .user_name {
+        font-size: 28px;
+        margin-top: 102px;
+        margin-bottom: 36px;
+        text-align: center;
+        font-weight: 400;
+      }
+
+      .card.form {
+        max-width: 640px;
+        margin: 24px auto;
+      }
+    </style>
+
+    <div class="cover">
+      <div class="profile_pic shadow" style="background-image:url(https://scontent-kut2-1.xx.fbcdn.net/v/t1.0-9/18402591_1461877793885051_8555059706353433148_n.jpg?oh=ffa14eba2d24fa49865ddbfb0d1a490a&oe=5A2FDA58)"></div>
+      <div class="type shadow">A+</div>
+    </div>
+
+    <div class="user_name">Tumenbayeva Dara</div>
+
+    <div class="card form">
+      <fb-form header="General" form-input="{{general_forminput}}"></fb-form>
+    </div>
+
+    <div class="card form">
+      <fb-form header="General" form-input="{{location_forminput}}"></fb-form>
+    </div>
+
+    <div class="card form">
+      <fb-form header="Notifications" form-input="{{notification_forminput}}"></fb-form>
+    </div>
+
+    <!-- argghhhhhhhhh -->
+    <br><br>
+  </template>
+
+  <script>
+    class FbSettings extends Polymer.Element {
+      static get is() { return 'fb-settings'; }
+
+      ready() {
+        super.ready();
+
+
+
+        var blood_group = [
+          {
+            id: 'op',
+            name: 'O+'
+          }, {
+            id: 'om',
+            name: 'O-'
+          }, {
+            id: 'ap',
+            name: 'A+'
+          }, {
+            id: 'am',
+            name: 'A-'
+          }, {
+            id: 'bp',
+            name: 'B+'
+          }, {
+            id: 'bm',
+            name: 'B-'
+          }, {
+            id: 'abp',
+            name: 'AB+'
+          }, {
+            id: 'abm',
+            name: 'AB-'
+          }
+        ]
+
+        var state_list = [{
+          id: 'kl',
+          name: 'Kuala Lumpur'
+        }, {
+          id: 'jh',
+          name: 'Johor'
+        }, {
+          id: 'kd',
+          name: 'Kedah'
+        }, {
+          id: 'kt',
+          name: 'Kelantan'
+        }, {
+          id: 'ml',
+          name: 'Melaka'
+        }, {
+          id: 'ns',
+          name: 'Negeri Sembilan'
+        }, {
+          id: 'ph',
+          name: 'Pahang'
+        }, {
+          id: 'pn',
+          name: 'Penang'
+        }, {
+          id: 'pr',
+          name: 'Perak'
+        }, {
+          id: 'pl',
+          name: 'Perlis'
+        }, {
+          id: 'sb',
+          name: 'Sabah'
+        }, {
+          id: 'sw',
+          name: 'Sarawak'
+        }, {
+          id: 'tg',
+          name: 'Terengganu'
+        }, {
+          id: 'lb',
+          name: 'Labaun'
+        }, {
+          id: 'pj',
+          name: 'Putrajaya'
+        }]
+
+        this.set('general_forminput', [
+          {
+            type: 'text',
+            name: 'full_name',
+            label: 'Full Name',
+            placeholder: ''
+          }, {
+            type: 'number',
+            name: 'age',
+            label: 'Age',
+            placeholder: ''
+          }, {
+            type: 'tel',
+            name: 'telephone',
+            label: 'Telephone',
+            placeholder: ''
+          }, {
+            type: 'dropdown',
+            name: 'blood_group',
+            label: 'Blood Group',
+            placeholder: '',
+            dropdown: blood_group
+          }])
+
+        this.set('location_forminput', [{
+          type: 'dropdown',
+          name: 'state',
+          label: 'State',
+          placeholder: '',
+          dropdown: state_list
+        }])
+
+        var noti_bg = JSON.parse(JSON.stringify(blood_group));
+
+        noti_bg.unshift({
+          id: 'all',
+          name: 'All'
+        })
+
+        noti_bg.push({
+          id: 'none',
+          name: 'None'
+        })
+
+        this.set('notification_forminput', [{
+          type: 'dropdown',
+          name: 'blood_group',
+          label: 'Get notification when x blood group is out of stock',
+          placeholder: '',
+          dropdown: noti_bg
+        }])
+      }
+    }
+
+
+
+    window.customElements.define(FbSettings.is, FbSettings);
+  </script>
+</dom-module>

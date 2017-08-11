@@ -11,28 +11,75 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="fb-home">
+<dom-module id="fb-history">
   <template>
     <style include="shared-styles">
-      :host {
+       :host {
         display: block;
-        padding: 10px;
+      }
+
+      .cover {
+        height: 164px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        background: var(--app-primary-color);
+      }
+
+      .profile_pic {
+        margin-bottom: -82px;
+        width: 164px;
+        height: 164px;
+        border-radius: 50%;
+        background-size: cover;
+        border: 3px solid white;
+      }
+
+      .type {
+        width: 42px;
+        height: 42px;
+        color: white;
+        background: var(--app-primary-color);
+        border: 3px solid white;
+        display: flex;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        margin-top: 68px;
+        margin-left: 68px;
+        font-weight: 600;
+      }
+
+      .user_name{
+        font-size: 28px;
+        margin-top: 102px;
+        text-align: center;
+        font-weight: 400;
+      }
+
+      .card{
+        max-width: 860px;
+        margin: 24px auto;
       }
     </style>
 
-    <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+    <div class="cover">
+      <div class="profile_pic shadow" style="background-image:url(https://scontent-kut2-1.xx.fbcdn.net/v/t1.0-9/18402591_1461877793885051_8555059706353433148_n.jpg?oh=ffa14eba2d24fa49865ddbfb0d1a490a&oe=5A2FDA58)"></div>
+      <div class="type shadow">A+</div>
     </div>
+
+    <div class="user_name">Tumenbayeva Dara</div>
+
+    <div class="card"></div>
   </template>
 
   <script>
-    class MyView1 extends Polymer.Element {
-      static get is() { return 'my-view1'; }
+    class FbHistory extends Polymer.Element {
+      static get is() { return 'fb-history'; }
     }
 
-    window.customElements.define(MyView1.is, MyView1);
+    window.customElements.define(FbHistory.is, FbHistory);
   </script>
 </dom-module>

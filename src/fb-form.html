@@ -1,0 +1,243 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="fb-form">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+            }
+
+            .title{
+                color: #212121;
+                margin: 4px;
+                font-size: 20px;
+                font-weight: 400;
+            }
+
+            .header {
+                justify-content: space-between;
+                display: flex;
+                align-items: center;
+            }
+
+            form {
+                margin: 12px 0;
+            }
+
+            .item {
+                display: block;
+                max-width: 100%;
+                padding: 12px 0;
+                margin-bottom: 6px;
+            }
+
+            .item span {
+                margin: 4px;
+                display: block;
+                font-size: 14px;
+            }
+
+            .item input,
+            .item select,
+            .item textarea {
+                width: 100%;
+                font-weight: 400;
+                font-size: 14px;
+                height: 32px;
+                box-sizing: border-box;
+                padding: 8px;
+                border-radius: 3px;
+                border: 1px solid #eeeeee;
+            }
+
+            .item textarea {
+                min-width: 80%;
+                max-width: 80%;
+                height: 120px;
+            }
+
+            .item input:focus,
+            .item textarea:focus,
+            .item select:focus {
+                outline: none;
+                border: 2px solid #4a90e2;
+            }
+
+            .item input::placeholder {
+                font-weight: 400;
+                color: #a5a5a5;
+            }
+
+            @media screen and (max-width: 860px) {
+                .item {
+                    max-width: 100%;
+                }
+                .item input,
+                .item select,
+                .item textarea {
+                    width: 100%;
+                }
+                .item textarea {
+                    min-width: 100%;
+                }
+            }
+        </style>
+
+        <div class="header">
+            <div class="title">{{header}}</div>
+        </div>
+
+        <slot name="top_text"></slot>
+
+        <iron-form id="form">
+            <form>
+                <dom-repeat items="{{formInput}}">
+                    <template>
+                        <dom-if if="{{_isType(item.type)}}">
+                            <template>
+                                <paper-input label="{{item.label}}" type="{{item.type}}" id="{{item.name}}" placeholder="{{item.placeholder}}" name="{{item.name}}"></paper-input>
+                            </template>
+                        </dom-if>
+                        <dom-if if="{{_isDropdown(item.type)}}">
+                            <template>
+                                <div class="item">
+                                    <label><span>{{item.label}}</span></label>
+                                    <select name="{{item.name}}" value="{{item.value::change}}">
+                                        <template is="dom-repeat" items="{{item.dropdown}}" as="dropdown">
+                                            <option value="{{dropdown.id}}">{{dropdown.name}}</option> 
+                                        </template>
+                                    </select>
+                                </div>
+                            </template>
+                        </dom-if>
+
+                        <!-- <dom-if if="{{_isDateTime(item.type)}}">
+                            <template>
+                                <dom-if if="{{_isListener(item)}}">
+                                    <template>
+                                        <label class="item">
+                                            <span>{{item.label}} :</span>
+                                            <input type="{{item.type}}" id="{{item.name}}" placeholder="{{item.placeholder}}" name="{{item.name}}" value="{{item.value::change}}" on-input="_inputOnChange">
+                                        </label>
+                                    </template>
+                                </dom-if>
+                                <dom-if if="{{!_isListener(item)}}">
+                                    <template>
+                                        <label class="item">
+                                            <span>{{item.label}} :</span>
+                                            <input type="{{item.type}}" placeholder="{{item.placeholder}}" name="{{item.name}}" value="{{item.value::change}}">
+                                        </label>
+                                    </template>
+                                </dom-if>
+                            </template>
+                        </dom-if>
+                        <dom-if if="{{_isType(item.type)}}">
+                            <template>
+                                <label class="item">
+                                    <span>{{item.label}} :</span>
+                                    <input type="{{item.type}}" placeholder="{{item.placeholder}}" name="{{item.name}}" value="{{item.value::change}}">
+                                </label>
+                            </template>
+                        </dom-if>
+                        <dom-if if="{{_isTextArea(item.type)}}">
+                            <template>
+                                <label class="item">
+                                    <span>{{item.label}} :</span>
+                                    <textarea name="{{item.name}}"></textarea>
+                                </label>
+                            </template>
+                        </dom-if>
+                        <dom-if if="{{_isDropdown(item.type)}}">
+                            <template>
+                                <div class="item">
+                                    <label><span>{{item.label}}</span></label>
+                                    <select name="{{item.name}}" value="{{item.value::change}}">
+                                        <template is="dom-repeat" items="{{item.dropdown}}" as="dropdown">
+                                            <option value="{{dropdown.id}}">{{dropdown.name}}</option> 
+                                        </template>
+                                     </select>
+                                </div>
+                            </template>
+                        </dom-if> -->
+                    </template>
+                </dom-repeat>
+                <button id="submit" type="submit" hidden></button>
+            </form>
+            <slot name="bottom_text"></slot>
+
+            <div class="button_container">
+                <slot></slot>
+            </div>
+        </iron-form>
+
+    </template>
+
+    <script>
+        class FbForm extends Polymer.GestureEventListeners(Polymer.Element) {
+            static get is() { return 'fb-form'; }
+            static get properties() {
+                return {
+                    header: String,
+                    button: String,
+                    formInput: {
+                        type: Object,
+                        notify: true
+                    },
+                }
+            }
+
+            _inputOnChange(e) {
+                this.dispatchEvent(new CustomEvent(e.model.item.listener, { detail: { value: e.target.value, id: e.target.id } }));
+            }
+
+            ready() {
+                super.ready();
+                this.$.form.addEventListener('iron-form-presubmit', event => {
+                    event.preventDefault();
+                });
+            }
+
+            _isListener(item) {
+                if (item.listener) return true;
+            }
+
+            _isDropdown(item) {
+                if (item == 'dropdown') return true;
+            }
+
+            _isType(item) {
+                if (item == 'text' || item == 'number' || item == 'number' || item == 'email' || item == 'password' || item == 'tel') return true;
+            }
+
+            _isTextArea(item) {
+                if (item == 'textarea') return true;
+            }
+
+            _isDateTime(item) {
+                if (item == 'date' || item == 'time') return true;
+            }
+
+            resetForm() {
+                this.$.form.reset();
+            }
+
+            submitForm() {
+                this.$.submit.click();
+                if (this.$.form.validate()) {
+                    return this.$.form.serializeForm();
+                }
+                return false;
+            }
+
+            getFormData() {
+                return this.$.form.serializeForm();
+            }
+        }
+
+        window.customElements.define(FbForm.is, FbForm);
+    </script>
+</dom-module>
