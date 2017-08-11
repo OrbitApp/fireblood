@@ -9,6 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="fb-form.html">
 <link rel="import" href="shared-styles.html">
 
@@ -65,6 +66,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         max-width: 640px;
         margin: 24px auto;
       }
+
+      .submit {
+        font-weight: 500;
+        color: white;
+        background: var(--app-primary-color);
+      }
+
+      .container {
+        display: flex;
+        align-self: center;
+        justify-content: center;
+      }
     </style>
 
     <div class="cover">
@@ -75,15 +88,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="user_name">{{username}}</div>
 
     <div class="card form">
-      <fb-form header="General" form-input="{{general_forminput}}"></fb-form>
+      <fb-form id="general" header="General" form-input="{{general_forminput}}"></fb-form>
     </div>
 
     <div class="card form">
-      <fb-form header="Location" form-input="{{location_forminput}}"></fb-form>
+      <fb-form id="location" header="Location" form-input="{{location_forminput}}"></fb-form>
     </div>
 
     <div class="card form">
-      <fb-form header="Notifications" form-input="{{notification_forminput}}"></fb-form>
+      <fb-form id="notification" header="Notifications" form-input="{{notification_forminput}}"></fb-form>
+    </div>
+
+    <div class="container">
+      <paper-button class="submit" on-tap="save" raised>Save</paper-button>
+      <paper-button>Cancel</paper-button>
     </div>
 
     <!-- argghhhhhhhhh -->
@@ -94,8 +112,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class FbSettings extends Polymer.Element {
       static get is() { return 'fb-settings'; }
 
+      save() {
+        var general = this.$.general.submitForm();
+        var user = firebase.auth().currentUser;
+        firebase.database().ref('/users/' + user.uid + '/displayName').set(general.full_name);
+        firebase.database().ref('/users/' + user.uid + '/age').set(general.age);
+        firebase.database().ref('/users/' + user.uid + '/tel').set(general.telephone);
+        firebase.database().ref('/users/' + user.uid + '/blood_group').set(general.blood_group);
+        alert('Update Success')
+        this.ready();
+      }
+
       ready() {
         super.ready();
+
+        this.set('general_forminput', null);
+        this.set('location_forminput', null);
+        this.set('notification_forminput', null);
 
         var blood_group = [
           {
@@ -174,63 +207,67 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         firebase.auth().onAuthStateChanged(user => {
           if (user) {
+            var data = {};
             this.photo_url = user.photoURL;
-            this.username = user.displayName;
 
-            this.set('general_forminput', [
-              {
-                type: 'text',
-                name: 'full_name',
-                label: 'Full Name',
-                value: user.displayName,
-                placeholder: ''
-              }, {
-                type: 'number',
-                name: 'age',
-                label: 'Age',
-                placeholder: '',
-                value: 21
-              }, {
-                type: 'tel',
-                name: 'telephone',
-                label: 'Telephone',
-                placeholder: '',
-                value: '+14159641808'
-              }, {
+            firebase.database().ref('/users/' + user.uid).once('value').then(snapshot => {
+              data = snapshot.val();
+              this.username = data.displayName;
+              this.set('general_forminput', [
+                {
+                  type: 'text',
+                  name: 'full_name',
+                  label: 'Full Name',
+                  value: data.displayName,
+                  placeholder: ''
+                }, {
+                  type: 'number',
+                  name: 'age',
+                  label: 'Age',
+                  placeholder: '',
+                  value: data.age
+                }, {
+                  type: 'tel',
+                  name: 'telephone',
+                  label: 'Telephone',
+                  placeholder: '',
+                  value: data.tel
+                }, {
+                  type: 'dropdown',
+                  name: 'blood_group',
+                  label: 'Blood Group',
+                  placeholder: '',
+                  dropdown: blood_group
+                }])
+
+              this.set('location_forminput', [{
                 type: 'dropdown',
-                name: 'blood_group',
-                label: 'Blood Group',
+                name: 'state',
+                label: 'State',
                 placeholder: '',
-                dropdown: blood_group
+                dropdown: state_list
               }])
 
-            this.set('location_forminput', [{
-              type: 'dropdown',
-              name: 'state',
-              label: 'State',
-              placeholder: '',
-              dropdown: state_list
-            }])
+              var noti_bg = JSON.parse(JSON.stringify(blood_group));
 
-            var noti_bg = JSON.parse(JSON.stringify(blood_group));
+              noti_bg.unshift({
+                id: 'all',
+                name: 'All'
+              })
 
-            noti_bg.unshift({
-              id: 'all',
-              name: 'All'
+              noti_bg.push({
+                id: 'none',
+                name: 'None'
+              })
+
+              this.set('notification_forminput', [{
+                type: 'dropdown',
+                name: 'blood_group',
+                label: 'Select a blood group to receive notifications for',
+                placeholder: '',
+                dropdown: noti_bg
+              }])
             })
-
-            noti_bg.push({
-              id: 'none',
-              name: 'None'
-            })
-
-            this.set('notification_forminput', [{
-              type: 'dropdown',
-              name: 'blood_group',
-              label: 'Select a blood group to receive notifications for',
-              placeholder: '',
-              dropdown: noti_bg
-            }])
           }
         })
       }

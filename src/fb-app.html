@@ -72,6 +72,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: black;
         font-weight: bold;
       }
+
+      .logout {
+        margin-right: 12px;
+        font-size: 16px;
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.9)
+      }
+
+      .logout:hover {
+        color: rgba(255, 255, 255, 1)
+      }
     </style>
 
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
@@ -97,7 +108,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar>
             <paper-icon-button icon="fb-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Fireblood</div>
-            <paper-button on-tap="logout">Logout</paper-button>
+            <span class="logout" on-tap="logout" hidden$="{{!user}}">Logout</span>
           </app-toolbar>
         </app-header>
 
@@ -123,6 +134,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       static get properties() {
         return {
+          user: Object,
           page: {
             type: String,
             reflectToAttribute: true,
@@ -158,31 +170,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         const messaging = firebase.messaging();
 
-        console.log(messaging)
-
         firebase.auth().onAuthStateChanged(user => {
           if (user) {
-          messaging.requestPermission()
-            .then(() => {
-              console.log('Notification permission granted.');
-              messaging.getToken()
-              .then(currentToken => {
-                if (currentToken) {
-                  //console.log(user.uid)
-                  firebase.database().ref('/notification/' + user.uid + '/notification_id').set(currentToken)
-                  //...
-                }
-                else{
-                  //...
-                }
-              })
-            })
-            .catch(err => {
-              console.log('Unable to get permission to notify.', err);
+            this.set('user', user);
+            var db = firebase.database();
+            db.ref('/users/' + user.uid).once('value').then(snapshot => {
+              if (!snapshot.val()) {
+                db.ref('/users/' + user.uid).set({
+                  displayName: user.displayName,
+                  photoURL: user.photoURL
+                })
+              }
+
             });
+            messaging.requestPermission()
+              .then(() => {
+                console.log('Notification permission granted.');
+                messaging.getToken()
+                  .then(currentToken => {
+                    if (currentToken) {
+                      //console.log(user.uid)
+                      db.ref('/users/' + user.uid + '/notificationTokens/' + currentToken).set(true)
+                      //...
+                    }
+                    else {
+                      //...
+                    }
+                  })
+              })
+              .catch(err => {
+                console.log('Unable to get permission to notify.', err);
+              });
+          }
+          else {
+            this.set('user', null);
           }
         })
-      }   
+      }
 
       logout() {
         firebase.auth().signOut().then(_ => {

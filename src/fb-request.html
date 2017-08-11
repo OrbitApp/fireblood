@@ -51,31 +51,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready() {
         super.ready();
 
-        this.set('description', "write something here")
+        this.set('description', "vampire ❤ blood");
+
+        var blood_group = [ { id: 'op', name: 'O+' }, { id: 'om', name: 'O-' }, { id: 'ap', name: 'A+' }, { id: 'am', name: 'A-' }, { id: 'bp', name: 'B+' }, { id: 'bm', name: 'B-' }, { id: 'abp', name: 'AB+' }, { id: 'abm', name: 'AB-' } ]
+
+        var location = [{ "id": 1, "name": "Beacon Hospital", "address": "No. 1, Jalan 215, Section 51, Off Jalan Templer Petaling Jaya Selangor 46050 Malaysia, Malaysia" }, { "id": 2, "name": "KPJ Sentosa KL Specialist Hospital", "address": "36, Jalan Chemur Kompleks Damai Kuala Lumpur WP Kuala Lumpur 60400 Malaysia, Malaysia" }, { "id": 3, "name": "Hospital Fatimah", "address": "1 Lebuh Chew Peng Loon Off Jalan Dato’ Lau Pak Khuan Ipoh Garden Ipoh Perak 31400 Malaysia, Malaysia" }, { "id": 4, "name": "Manipal Hospitals Klang", "address": "Lot 83211,, Persiaran Batu Nilam, Bandar Bukit Tinggi, 41200 Klang, Selangor, Malaysia" }, { "id": 5, "name": "Pantai Hospital Ipoh", "address": "126, Jalan Tambun Ipoh Perak 31400 Malaysia, Malaysia" }, { "id": 6, "name": "Gleneagles Kuala Lumpur", "address": "Block A \u0026 Block B, 286 \u0026 288, Jalan Ampang, 50450 Kuala Lumpur, Federal Territory of Kuala Lumpur, Malaysia" }]
 
         this.set('forminput', [{
-          type: 'text',
+          type: 'dropdown',
           name: 'hospital',
           label: 'Hospital',
-          placeholder: ''
-        },{
-          type: 'number',
-          name: 'age',
-          label: 'Age',
-          placeholder: ''
+          dropdown: location
         },{
           type: 'dropdown',
           name: 'blood_type',
           label: 'Blood Type',
-          placeholder: '',
-          dropdown: [{
-            id: 'a',
-            name: 'A'
-          },
-          {
-            id: 'b',
-            name: 'B'
-          }]
+          dropdown: blood_group
         }])
       }
     }
