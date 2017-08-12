@@ -179,11 +179,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
             <div class="card_action">
               <a class="action" href="/hospital/view/{{item.id}}/">
-                    <span>Contact Hospital</span>
-                  </a>
-              <a class="action" href="/hospital/view/{{item.id}}/">
-                    <span>I'm coming to donate</span>
-                  </a>
+                <span>Contact Hospital</span>
+              </a>
+              <div class="action" on-tap="comeDonate" id="comedonate">
+                <span id="text">I'm coming to donate</span>
+              </div>
             </div>
           </div>
           <div class="card">
@@ -209,7 +209,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
         <div class="container">
           <div class="card maps">
-            <google-map latitude="[[data.latitude]]" longitude="[[data.longitude]]" api-key="AIzaSyBMgNj2em22-T8SEd3dbrrSgIoMgtWPuvU">
+            <google-map zoom=16 latitude="[[data.latitude]]" longitude="[[data.longitude]]" api-key="AIzaSyBMgNj2em22-T8SEd3dbrrSgIoMgtWPuvU">
               <google-map-marker latitude="[[data.latitude]]" longitude="[[data.longitude]]" title="Go Giants!"></google-map-marker>
             </google-map>
           </div>
@@ -237,6 +237,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.page = page || 'home';
         this.loadData();
       }
+
+      comeDonate(){
+        this.$.comedonate.style.color = '#ffffff';
+        this.$.comedonate.style.background = '#4CAF50';
+        this.$.comedonate.querySelector('span').innerHTML = "Request received. <br>Thank you."
+      } 
 
       loadData() {
         if (this.page == 'home') {

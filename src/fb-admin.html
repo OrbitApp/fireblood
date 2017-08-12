@@ -80,16 +80,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             pushNotification() {
                 var form = this.$.form.submitForm();
                 if (form) {
-                    form.date = new Date(form.date + " " + form.time).getTime() / 1000;
-                    delete form.time;
-                    
-                    this.$.request.url = "http://localhost:5000/mydd-d1223/us-central1/sendMessage";
-                    this.$.request.method = 'GET'
-                    this.$.request.params = form
-                    var r = this.$.request.generateRequest();
-                    Promise.all([r.completes]).then(requests => {
-                        alert('i think ok liao');
-                    })
+                    // this.$.request.url = "https://us-central1-mydd-d1223.cloudfunctions.net/sendMessage";
+                    // this.$.request.method = 'POST'
+                    // this.$.request.body = {data: {
+                    //     blood: 
+                    // }}
+                    // var r = this.$.request.generateRequest();
+                    // Promise.all([r.completes]).then(requests => {
+                    //     alert('i think ok liao');
+                    // })
                 }
             }
 
@@ -124,28 +123,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     }
                 ]
 
-                var location = [{ "id": 1, "name": "Beacon Hospital", "address": "No. 1, Jalan 215, Section 51, Off Jalan Templer Petaling Jaya Selangor 46050 Malaysia, Malaysia" }, { "id": 2, "name": "KPJ Sentosa KL Specialist Hospital", "address": "36, Jalan Chemur Kompleks Damai Kuala Lumpur WP Kuala Lumpur 60400 Malaysia, Malaysia" }, { "id": 3, "name": "Hospital Fatimah", "address": "1 Lebuh Chew Peng Loon Off Jalan Dato’ Lau Pak Khuan Ipoh Garden Ipoh Perak 31400 Malaysia, Malaysia" }, { "id": 4, "name": "Manipal Hospitals Klang", "address": "Lot 83211,, Persiaran Batu Nilam, Bandar Bukit Tinggi, 41200 Klang, Selangor, Malaysia" }, { "id": 5, "name": "Pantai Hospital Ipoh", "address": "126, Jalan Tambun Ipoh Perak 31400 Malaysia, Malaysia" }, { "id": 6, "name": "Gleneagles Kuala Lumpur", "address": "Block A \u0026 Block B, 286 \u0026 288, Jalan Ampang, 50450 Kuala Lumpur, Federal Territory of Kuala Lumpur, Malaysia" }]
+                var location = [{
+                    "id": "Beacon Hospital",
+                    "name": "Beacon Hospital"
+                }, {
+                    "id": "KPJ Sentosa KL Specialist Hospital",
+                    "name": "KPJ Sentosa KL Specialist Hospital"
+                }, {
+                    "id": "Hospital Fatimah",
+                    "name": "Hospital Fatimah"
+                }, {
+                    "id": "Manipal Hospitals Klang",
+                    "name": "Manipal Hospitals Klang"
+                }, {
+                    "id": "Pantai Hospital Ipoh",
+                    "name": "Pantai Hospital Ipoh"
+                }, {
+                    "id": "Gleneagles Kuala Lumpur",
+                    "name": "Gleneagles Kuala Lumpur"
+                }]
 
                 this.set('forminput', [{
-                    type: 'text',
-                    name: 'topic',
-                    label: 'Topic',
-                    placeholder: ''
-                }, {
                     type: 'dropdown',
-                    name: 'location',
-                    label: 'Location',
+                    name: 'hospital',
+                    label: 'Hospital',
                     dropdown: location
-                }, {
-                    type: 'date',
-                    name: 'date',
-                    label: 'Date',
-                    placeholder: ''
-                }, {
-                    type: 'time',
-                    name: 'time',
-                    label: 'Time',
-                    placeholder: ''
                 }, {
                     type: 'dropdown',
                     name: 'blood',
