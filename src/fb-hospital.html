@@ -9,6 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/google-map/google-map.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="fb-hospital">
@@ -27,9 +28,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         justify-content: center;
       }
 
+      .maps.card {
+        max-width: 984px;
+        width: 100%;
+      }
+
       .card {
+        margin: 4px 12px;
         width: 480px;
         padding: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      iron-icon {
+        color: #4e90eb;
       }
 
       .card .card_image {
@@ -38,7 +51,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-position: center;
       }
 
+      .card .card_blood {
+        height: 250px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3em;
+        color: white;
+        position: relative;
+        background: #E53935;
+      }
+
+      .card .card_blood .bottom {
+        position: absolute;
+        bottom: 12px;
+        font-size: 15px;
+      }
+
       .card .card_content {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: flex-start;
         padding: 16px;
       }
 
@@ -47,71 +81,245 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: black;
         margin: 4px 0;
       }
+
+      .card_action {
+        justify-content: space-around;
+        display: flex
+      }
+
+      .card_action .action {
+        height: 42px;
+        border-top: 1px solid #b9b9b9;
+        display: flex;
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase
+      }
+
+      .card_action .action:first-child {
+        border-right: 1px solid #b9b9b9;
+      }
+
+      .card_action .action#urgent {
+        background: red;
+        color: white;
+      }
+
+      .card_action .action .status {
+        font-weight: 500;
+        font-size: 18px;
+      }
+
+      .card_action .action .small {
+        font-size: 13px
+      }
+
+      a {
+        text-decoration: none;
+        color: black;
+        font-weight: 500;
+      }
+
+      google-map {
+        width: 100%;
+        height: 300px;
+      }
+
+      #view .action {
+        padding: 6px 12px;
+        font-size: 15px;
+        color: #484848
+      }
+
+      #view .action:hover{
+        background: #ececec;
+      }
     </style>
 
-    <div class="container">
-      <dom-repeat items="{{location}}">
-        <template>
+    <app-route route="{{route}}" pattern="/hospital/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+    <app-route route="{{route}}" pattern="/hospital/view/:id" data="{{viewRouteData}}"></app-route>
+
+    <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="home">
+      <section name="home" id="home">
+        <div class="container">
+          <dom-repeat items="{{location}}">
+            <template>
+              <div class="card">
+                <div class="card_image" style$="background-image: url({{item.image}})"></div>
+                <div class="card_content">
+                  <h2>{{item.name}}</h2>
+                  <p>{{item.address}}</p>
+                </div>
+                <div class="card_action">
+                  <div class="action" id$="{{item.status}}">
+                    <span class="small">Blood Supply</span>
+                    <span class="status">{{item.status}}</span>
+                  </div>
+                  <a class="action" href="/hospital/view/{{item.id}}/">
+                    <span>More Info</span>
+                  </a>
+                </div>
+              </div>
+            </template>
+          </dom-repeat>
+        </div>
+      </section>
+      <section name="view" id="view">
+        <div class="container">
           <div class="card">
-            <div class="card_image" style$="background-image: url({{item.image}})"></div>
+            <div class="card_image" style$="background-image: url({{data.image}})"></div>
             <div class="card_content">
-              <h2>{{item.name}}</h2>
-              <p>{{item.address}}</p>
+              <h2>{{data.name}}</h2>
+              <p>{{data.address}}</p>
+              <span><iron-icon icon="fb-icons:navigate"></iron-icon> {{distance}}KM from your current location</span>
+            </div>
+            <div class="card_action">
+              <a class="action" href="/hospital/view/{{item.id}}/">
+                    <span>Contact Hospital</span>
+                  </a>
+              <a class="action" href="/hospital/view/{{item.id}}/">
+                    <span>I'm coming to donate</span>
+                  </a>
             </div>
           </div>
-        </template>
-      </dom-repeat>
-    </div>
-
-
+          <div class="card">
+            <div class="card_blood">
+              <span>B+</span>
+              <span class="bottom">URGENT</span>
+            </div>
+            <div class="card_content">
+              <span>Blood Group: B+</span>
+              <span>Blood Supply: Urgent</span>
+              <span>Date Request: 5:00PM, 12 July 2017</span>
+              <span>Last Updated: 5:15PM, 12 July 2017</span>
+            </div>
+            <div class="card_action">
+              <a class="action" href="/hospital/view/{{item.id}}/">
+                  <span>Share to Facebook</span>
+                </a>
+              <a class="action" href="/hospital/view/{{item.id}}/">
+                  <span>Share to Twitter</span>
+                </a>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="card maps">
+            <google-map latitude="{{data.latitude}}" longitude="{{data.longitude}}" api-key="AIzaSyBMgNj2em22-T8SEd3dbrrSgIoMgtWPuvU">
+              <google-map-marker latitude="{{data.latitude}}" longitude="{{data.longitude}}" title="Go Giants!"></google-map-marker>
+            </google-map>
+          </div>
+        </div>
+      </section>
+    </iron-pages>
   </template>
 
   <script>
-    class FbHospital extends Polymer.Element {
+    class FbHospital extends Polymer.LegacyElementMixin(Polymer.Element) {
       static get is() { return 'fb-hospital'; }
+
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.page)'
+        ];
+      }
+
+      _routePageChanged(page) {
+        if (page === undefined) {
+          return;
+        }
+        this.page = page || 'home';
+        this.loadData();
+      }
+
+      loadData() {
+        if (this.page == 'home') {
+          this.set('location', [
+            {
+              "status": "urgent",
+              "id": 1,
+              "name": "Beacon Hospital",
+              "address": "No. 1, Jalan 215, Section 51, Off Jalan Templer Petaling Jaya Selangor 46050 Malaysia, Malaysia",
+              "image": "http://cdn.whatclinic.com/cosmetic-plastic-surgery/malaysia/kuala-lumpur/taman-oug/beacon-international-specialist-centre/thumbnails/086346d3c0781651/beacon_hospital.jpg?hmac=f66a4ccd4e560936a71612d1c8e03d80a1ae34cb"
+            },
+            {
+              "status": "urgent",
+              "id": 4,
+              "name": "Manipal Hospitals Klang",
+              "address": "Lot 83211,, Persiaran Batu Nilam, Bandar Bukit Tinggi, 41200 Klang, Selangor, Malaysia",
+              "image": "http://www.themalaysiantimes.com.my/wp-content/uploads/2016/07/Manipal_Hospitals_cropped.transformed.jpg"
+            },
+            {
+              "status": "normal",
+              "id": 2,
+              "name": "KPJ Sentosa KL Specialist Hospital",
+              "address": "36, Jalan Chemur Kompleks Damai Kuala Lumpur WP Kuala Lumpur 60400 Malaysia, Malaysia",
+              "image": "https://prodbookdoccom.s3.amazonaws.com/uploads/locations/clinic_main_photo_location/large_c899b3bab1.jpg"
+            },
+            {
+              "status": "normal",
+              "id": 3,
+              "name": "Hospital Fatimah",
+              "address": "1 Lebuh Chew Peng Loon Off Jalan Dato\u2019 Lau Pak Khuan Ipoh Garden Ipoh Perak 31400 Malaysia, Malaysia",
+              "image": "http://1.bp.blogspot.com/_OWhdrX10bSQ/RvvAOSvOY8I/AAAAAAAAC0I/9SJ6dG49yoU/s400/fatimah140st+a.jpg"
+            },
+            {
+              "status": "normal",
+              "id": 5,
+              "name": "Pantai Hospital Ipoh",
+              "address": "126, Jalan Tambun Ipoh Perak 31400 Malaysia, Malaysia",
+              "image": "http://www.salud.asia/assets/files/employer/ph2__20160812131525.jpg"
+            },
+            {
+              "status": "normal",
+              "id": 6,
+              "name": "Gleneagles Kuala Lumpur",
+              "address": "Block A & Block B, 286 & 288, Jalan Ampang, 50450 Kuala Lumpur, Federal Territory of Kuala Lumpur, Malaysia",
+              "image": "http://www.mymedholiday.com/FileUpload/Multimedia/130326114605420.jpg"
+            }
+          ])
+        }
+        if (this.page == 'view') {
+          this.set('data', {
+            latitude: "37.77493",
+            longitude: "-122.41942",
+            status: "urgent",
+            id: 1,
+            name: "Beacon Hospital",
+            address: "No. 1, Jalan 215, Section 51, Off Jalan Templer Petaling Jaya Selangor 46050 Malaysia, Malaysia",
+            image: "http://cdn.whatclinic.com/cosmetic-plastic-surgery/malaysia/kuala-lumpur/taman-oug/beacon-international-specialist-centre/thumbnails/086346d3c0781651/beacon_hospital.jpg?hmac=f66a4ccd4e560936a71612d1c8e03d80a1ae34cb"
+          })
+
+          navigator.geolocation.getCurrentPosition(pos => {
+            this.distance = this.getDistanceFromLatLonInKm(pos.coords.latitude, pos.coords.longitude, this.data.latitude, this.data.longitude);
+          });
+        }
+      }
+
+      getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+        var R = 6371; // Radius of the earth in km
+        var dLat = this.deg2rad(lat2 - lat1);  // deg2rad below
+        var dLon = this.deg2rad(lon2 - lon1);
+        var a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+          Math.sin(dLon / 2) * Math.sin(dLon / 2)
+          ;
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = R * c; // Distance in km
+        return Math.round(d);
+      }
+
+      deg2rad(deg) {
+        return deg * (Math.PI / 180)
+      }
 
       ready() {
         super.ready()
-
-        this.set('location', [
-          {
-            "id": 1,
-            "name": "Beacon Hospital",
-            "address": "No. 1, Jalan 215, Section 51, Off Jalan Templer Petaling Jaya Selangor 46050 Malaysia, Malaysia",
-            "image": "http://cdn.whatclinic.com/cosmetic-plastic-surgery/malaysia/kuala-lumpur/taman-oug/beacon-international-specialist-centre/thumbnails/086346d3c0781651/beacon_hospital.jpg?hmac=f66a4ccd4e560936a71612d1c8e03d80a1ae34cb"
-          },
-          {
-            "id": 2,
-            "name": "KPJ Sentosa KL Specialist Hospital",
-            "address": "36, Jalan Chemur Kompleks Damai Kuala Lumpur WP Kuala Lumpur 60400 Malaysia, Malaysia",
-            "image": "https://prodbookdoccom.s3.amazonaws.com/uploads/locations/clinic_main_photo_location/large_c899b3bab1.jpg"
-          },
-          {
-            "id": 3,
-            "name": "Hospital Fatimah",
-            "address": "1 Lebuh Chew Peng Loon Off Jalan Dato\u2019 Lau Pak Khuan Ipoh Garden Ipoh Perak 31400 Malaysia, Malaysia",
-            "image": "http://1.bp.blogspot.com/_OWhdrX10bSQ/RvvAOSvOY8I/AAAAAAAAC0I/9SJ6dG49yoU/s400/fatimah140st+a.jpg"
-          },
-          {
-            "id": 4,
-            "name": "Manipal Hospitals Klang",
-            "address": "Lot 83211,, Persiaran Batu Nilam, Bandar Bukit Tinggi, 41200 Klang, Selangor, Malaysia",
-            "image": "http://www.themalaysiantimes.com.my/wp-content/uploads/2016/07/Manipal_Hospitals_cropped.transformed.jpg"
-          },
-          {
-            "id": 5,
-            "name": "Pantai Hospital Ipoh",
-            "address": "126, Jalan Tambun Ipoh Perak 31400 Malaysia, Malaysia",
-            "image": "http://www.salud.asia/assets/files/employer/ph2__20160812131525.jpg"
-          },
-          {
-            "id": 6,
-            "name": "Gleneagles Kuala Lumpur",
-            "address": "Block A & Block B, 286 & 288, Jalan Ampang, 50450 Kuala Lumpur, Federal Territory of Kuala Lumpur, Malaysia",
-            "image": "http://www.mymedholiday.com/FileUpload/Multimedia/130326114605420.jpg"
-          }
-        ])
-
       }
     }
 
