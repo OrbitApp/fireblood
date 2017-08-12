@@ -201,7 +201,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <a class="action" href="/hospital/view/{{item.id}}/">
                   <span>Share to Facebook</span>
                 </a>
-              <a class="action" href="/hospital/view/{{item.id}}/">
+              <a target="_blank" class="action" href="http://twitter.com/share?text=Help! Blood needed urgently at {{data.name}}.&url=https://mydd-d1223.firebaseapp.com/hospital/view/{{item.id}}&hashtags=bloodrequest,mydd2017">
                   <span>Share to Twitter</span>
                 </a>
             </div>
@@ -221,7 +221,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     class FbHospital extends Polymer.LegacyElementMixin(Polymer.Element) {
 
-      // http://twitter.com/share?text=Help! Blood needed urgently.&url=https://mydd-d1223.firebaseapp.com/hospital/view/1/&hashtags=bloodrequest 
+      //  
       static get is() { return 'fb-hospital'; }
 
       static get observers() {
