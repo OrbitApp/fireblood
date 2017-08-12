@@ -8,7 +8,6 @@ admin.initializeApp(functions.config().firebase);
 //
 exports.sendMessage = functions.https.onRequest((request, response) => {
     // The topic name can be optionally prefixed with "/topics/".
-
     let topic = request.query.topic;
 
 // See the "Defining the message payload" section below for details
@@ -20,15 +19,40 @@ exports.sendMessage = functions.https.onRequest((request, response) => {
             date: request.query.date
         }
     };
-    admin.messaging().sendToTopic(topic, payload)
-        .then(function(response) {
-            // See the MessagingTopicResponse reference documentation for the
-            // contents of response.
-            console.log("Successfully sent message:", response);
+    admin.database.ref("users").once().then((snapshot) => {
+        let users = snapshot.val();
+        users.each((user) => {
+            //send notification
+            user.notificationTokens.each((token) => {
+                admin.messaging.sendToDevice(token, payload)
+                    .then((response) => {
+                        // See the MessagingTopicResponse reference documentation for the
+                        // contents of response.
+
+                        console.log("Successfully sent message:", response);
+                    })
+                    .catch((error) => {
+                        console.log("Error sending message:", error);
+                    });
+            })
         })
-        .catch(function(error) {
-            console.log("Error sending message:", error);
-        });
-        
+    });
+
     response.send("Hello from Firebase!");
 });
+
+exports.userPushNotification = functions.database.ref('/requests/{requestId}')
+    .onWrite( () => {
+        admin.database.ref("users").once().then((snapshot) => {
+            let users = snapshot.val();
+            users.each((user) => {
+                //send notification
+                user.notificationTokens.each((token) => {
+                    admin.messaging.sendToDevice(token, payload)
+                        .then((response) => console.log("Successfully sent message:", response))
+                        .catch((error) => {console.log("Error sending message:", error)
+                    });
+                })
+            })
+        });
+    });
