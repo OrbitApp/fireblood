@@ -135,7 +135,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #484848
       }
 
-      #view .action:hover{
+      #view .action:hover {
         background: #ececec;
       }
     </style>
@@ -209,8 +209,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
         <div class="container">
           <div class="card maps">
-            <google-map latitude="{{data.latitude}}" longitude="{{data.longitude}}" api-key="AIzaSyBMgNj2em22-T8SEd3dbrrSgIoMgtWPuvU">
-              <google-map-marker latitude="{{data.latitude}}" longitude="{{data.longitude}}" title="Go Giants!"></google-map-marker>
+            <google-map latitude="[[data.latitude]]" longitude="[[data.longitude]]" api-key="AIzaSyBMgNj2em22-T8SEd3dbrrSgIoMgtWPuvU">
+              <google-map-marker latitude="[[data.latitude]]" longitude="[[data.longitude]]" title="Go Giants!"></google-map-marker>
             </google-map>
           </div>
         </div>
@@ -238,65 +238,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       loadData() {
         if (this.page == 'home') {
-          this.set('location', [
-            {
-              "status": "urgent",
-              "id": 1,
-              "name": "Beacon Hospital",
-              "address": "No. 1, Jalan 215, Section 51, Off Jalan Templer Petaling Jaya Selangor 46050 Malaysia, Malaysia",
-              "image": "http://cdn.whatclinic.com/cosmetic-plastic-surgery/malaysia/kuala-lumpur/taman-oug/beacon-international-specialist-centre/thumbnails/086346d3c0781651/beacon_hospital.jpg?hmac=f66a4ccd4e560936a71612d1c8e03d80a1ae34cb"
-            },
-            {
-              "status": "urgent",
-              "id": 4,
-              "name": "Manipal Hospitals Klang",
-              "address": "Lot 83211,, Persiaran Batu Nilam, Bandar Bukit Tinggi, 41200 Klang, Selangor, Malaysia",
-              "image": "http://www.themalaysiantimes.com.my/wp-content/uploads/2016/07/Manipal_Hospitals_cropped.transformed.jpg"
-            },
-            {
-              "status": "normal",
-              "id": 2,
-              "name": "KPJ Sentosa KL Specialist Hospital",
-              "address": "36, Jalan Chemur Kompleks Damai Kuala Lumpur WP Kuala Lumpur 60400 Malaysia, Malaysia",
-              "image": "https://prodbookdoccom.s3.amazonaws.com/uploads/locations/clinic_main_photo_location/large_c899b3bab1.jpg"
-            },
-            {
-              "status": "normal",
-              "id": 3,
-              "name": "Hospital Fatimah",
-              "address": "1 Lebuh Chew Peng Loon Off Jalan Dato\u2019 Lau Pak Khuan Ipoh Garden Ipoh Perak 31400 Malaysia, Malaysia",
-              "image": "http://1.bp.blogspot.com/_OWhdrX10bSQ/RvvAOSvOY8I/AAAAAAAAC0I/9SJ6dG49yoU/s400/fatimah140st+a.jpg"
-            },
-            {
-              "status": "normal",
-              "id": 5,
-              "name": "Pantai Hospital Ipoh",
-              "address": "126, Jalan Tambun Ipoh Perak 31400 Malaysia, Malaysia",
-              "image": "http://www.salud.asia/assets/files/employer/ph2__20160812131525.jpg"
-            },
-            {
-              "status": "normal",
-              "id": 6,
-              "name": "Gleneagles Kuala Lumpur",
-              "address": "Block A & Block B, 286 & 288, Jalan Ampang, 50450 Kuala Lumpur, Federal Territory of Kuala Lumpur, Malaysia",
-              "image": "http://www.mymedholiday.com/FileUpload/Multimedia/130326114605420.jpg"
-            }
-          ])
+          firebase.database().ref('/hospitals/').once('value').then(snapshot => {
+            var data = []
+            snapshot.val().forEach(item => {
+              if (item){
+                data.push(item)
+              }
+            })
+            this.set('location', data)
+          })
         }
         if (this.page == 'view') {
-          this.set('data', {
-            latitude: "37.77493",
-            longitude: "-122.41942",
-            status: "urgent",
-            id: 1,
-            name: "Beacon Hospital",
-            address: "No. 1, Jalan 215, Section 51, Off Jalan Templer Petaling Jaya Selangor 46050 Malaysia, Malaysia",
-            image: "http://cdn.whatclinic.com/cosmetic-plastic-surgery/malaysia/kuala-lumpur/taman-oug/beacon-international-specialist-centre/thumbnails/086346d3c0781651/beacon_hospital.jpg?hmac=f66a4ccd4e560936a71612d1c8e03d80a1ae34cb"
-          })
-
-          navigator.geolocation.getCurrentPosition(pos => {
-            this.distance = this.getDistanceFromLatLonInKm(pos.coords.latitude, pos.coords.longitude, this.data.latitude, this.data.longitude);
-          });
+          this.async(_ => {
+            firebase.database().ref('/hospitals/' + this.viewRouteData.id + '/').once('value').then(snapshot => {
+              this.set('data', snapshot.val());
+              navigator.geolocation.getCurrentPosition(pos => {
+                this.distance = this.getDistanceFromLatLonInKm(pos.coords.latitude, pos.coords.longitude, this.data.latitude, this.data.longitude);
+              });
+            })
+          }, 50)
         }
       }
 
