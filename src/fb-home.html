@@ -19,7 +19,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles iron-flex iron-flex-alignment">
        :host {
         display: block;
-        padding: 10px;
       }
 
       .container {
@@ -28,15 +27,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin: 12px auto;
       }
 
-      img{
-        max-width: 540px; 
+      img {
+        max-width: 540px;
       }
 
-      a{
+      a {
         text-decoration: none;
       }
 
-      .login {
+      .login,
+      .welcome {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -44,64 +44,144 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         text-align: center;
         min-width: 280px;
         max-width: 280px;
-        padding: 32px 16px 48px 16px;
+        padding: 48px 16px 64px 16px;
       }
 
-      .login h2{
-        font-size: 24px;
-        margin-bottom: 1.5em;
+      .login h2,
+      .welcome h2 {
+        font-size: 25px;
         font-weight: 400;
+        color: black;
       }
 
-      .login paper-button {
+      .welcome h2 span {
+        font-size: 18px;
+      }
+
+      paper-button {
         width: 100%;
         margin: 6px auto;
         color: white;
         font-size: 14px;
       }
 
-      .login paper-button.google {
+      paper-button.google {
         background: #DD4B39;
       }
 
-      .login paper-button.facebook {
+      paper-button.facebook {
         background: #32508E;
       }
 
-      @media screen and (max-width: 860px){
-        .container{
+      .info {
+        padding: 48px 16px;
+        background-color: var(--app-primary-color);
+      }
 
+      .info p {
+        max-width: 860px;
+        margin: 0 auto;
+        line-height: 2em;
+        color: rgba(255, 255, 255, 0.85);
+        text-align: center;
+      }
+
+      .card.login[hidden],
+      .card.welcome[hidden] {
+        display: none;
+      }
+
+      .welcome h2,
+      .login h2 {
+        margin-bottom: 6px;
+      }
+
+      .login p {
+        margin-bottom: 2em;
+      }
+
+      @media screen and (max-width: 860px) {
+        .container {
+          flex-direction: column-reverse !important;
+        }
+        img {
+          width: 80%;
+        }
+        .welcome, .login{
+          min-width: 80%;
+          max-width: 80%;
+        }
+        .image {
+          text-align: center;
+          padding: 36px 0;
         }
       }
     </style>
 
 
     <div class="container layout horizontal center">
-      <div class="flex">
-          <img src="../images/donald.png">    
+      <div class="flex image">
+        <img src="../images/donald.png">
       </div>
-      <div class="card login">
-        <h2>Login</h2>
-        <div class="button-container">
-          <paper-button class="google" on-tap="google_login">Sign In with Google</paper-button>
-          <paper-button class="facebook">Sign In with Facebook</paper-button>
-        </div>
-      </div>
+      <dom-if if="{{!user}}">
+        <template>
+          <div class="card login">
+            <h2>Login</h2>
+            <p>Click the button below and<br>let the magic happen</p>
+            <div class="button-container">
+              <paper-button class="google" on-tap="google_login">Sign In with Google</paper-button>
+              <paper-button class="facebook">Sign In with Facebook</paper-button>
+            </div>
+          </div>
+        </template>
+      </dom-if>
+
+      <dom-if if="{{user}}">
+        <template>
+          <div class="card welcome">
+            <h2><span>Welcome back,</span><br>{{user.displayName}}</h2>
+            <p>If you got nothing to do, <br>why don't go donate blood? <br>And you get free Milo too!</p>
+            <div class="button-container">
+              <a href="/hospital">
+                <paper-button raised class="google">Find hospital to donate</paper-button>
+              </a>
+            </div>
+          </div>
+        </template>
+      </dom-if>
+    </div>
+    <div class="info">
+      <p>A blood donation occurs when a person voluntarily has blood drawn and used for transfusions and/or made into biopharmaceutical
+        medications by a process called fractionation (separation of whole-blood components). Donation may be of whole blood
+        (WB), or of specific components directly (the latter called apheresis). Blood banks often participate in the collection
+        process as well as the procedures that follow it.</p>
+    </div>
   </template>
 
   <script>
     class FbHome extends Polymer.GestureEventListeners(Polymer.Element) {
       static get is() { return 'fb-home'; }
 
+      static get properties() {
+        return {
+          user: Object
+        }
+      }
+
+      _showHidden() {
+        console.log('?')
+        return true;
+      }
+
       google_login() {
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider).then(result => {
-          window.history.pushState({}, null, '/settings');
-          window.dispatchEvent(new CustomEvent('location-changed'));
+          // window.history.pushState({}, null, '/settings');
+          // window.dispatchEvent(new CustomEvent('location-changed'));
         })
-        .catch(error => {
-          console.log('error')
-        })
+          .catch(error => {
+            console.log('error')
+          })
       }
     }
 

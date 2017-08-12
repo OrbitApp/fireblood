@@ -94,9 +94,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="home" href="[[rootPath]]home">Home</a>
+          <a name="hospital" href="[[rootPath]]hospital">Hospital</a>
+          <a name="request" href="[[rootPath]]request">Blood Request</a>
           <a name="blood" href="[[rootPath]]blood">Blood</a>
           <a name="history" href="[[rootPath]]history">History</a>
-          <a name="request" href="[[rootPath]]request">Request</a>
           <a name="settings" href="[[rootPath]]settings">Settings</a>
         </iron-selector>
       </app-drawer>
@@ -113,7 +114,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-header>
 
         <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
-          <fb-home name="home"></fb-home>
+          <fb-home name="home" user="{{user}}"></fb-home>
           <fb-landing name="landing"></fb-landing>
           <fb-blood name="blood"></fb-blood>
           <fb-history name="history"></fb-history>

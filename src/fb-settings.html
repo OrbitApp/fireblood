@@ -78,11 +78,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         align-self: center;
         justify-content: center;
       }
+
+      @media screen and (max-width: 860px) {
+        .cover {
+          height: 96px;
+        }
+        .type {
+          margin-top: 52px;
+          margin-left: 52px;
+          width: 38px;
+          height: 38px;
+        }
+        .profile_pic {
+          margin-bottom: -64px;
+          width: 128px;
+          height: 128px;
+          border-radius: 50%;
+          background-size: cover;
+          border: 3px solid white;
+        }
+        .user_name {
+          margin-top: 78px;
+        }
+      }
     </style>
 
     <div class="cover">
       <div class="profile_pic shadow" style="background-image:url({{photo_url}})"></div>
-      <div class="type shadow">A+</div>
+      <div class="type shadow">{{blood_text}}</div>
     </div>
 
     <div class="user_name">{{username}}</div>
@@ -208,6 +231,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         firebase.auth().onAuthStateChanged(user => {
           if (user) {
             var data = {};
+            var blood_text = ""
             this.photo_url = user.photoURL;
 
             firebase.database().ref('/users/' + user.uid).once('value').then(snapshot => {
@@ -247,6 +271,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 placeholder: '',
                 dropdown: state_list
               }])
+
+              blood_group.forEach(item => {
+                if(item.id == data.blood_group){
+                  this.set('blood_text', item.name);
+                }
+              })
 
               var noti_bg = JSON.parse(JSON.stringify(blood_group));
 

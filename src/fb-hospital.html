@@ -14,23 +14,105 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="fb-hospital">
   <template>
     <style include="shared-styles">
-      :host {
+       :host {
         display: block;
         padding: 10px;
       }
+
+      .container {
+        margin: 24px auto;
+        max-width: 1280px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .card {
+        width: 480px;
+        padding: 0;
+      }
+
+      .card .card_image {
+        height: 250px;
+        background-size: cover;
+        background-position: center;
+      }
+
+      .card .card_content {
+        padding: 16px;
+      }
+
+      .card .card_content h2 {
+        font-weight: 400;
+        color: black;
+        margin: 4px 0;
+      }
     </style>
 
-    <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+    <div class="container">
+      <dom-repeat items="{{location}}">
+        <template>
+          <div class="card">
+            <div class="card_image" style$="background-image: url({{item.image}})"></div>
+            <div class="card_content">
+              <h2>{{item.name}}</h2>
+              <p>{{item.address}}</p>
+            </div>
+          </div>
+        </template>
+      </dom-repeat>
     </div>
+
+
   </template>
 
   <script>
     class FbHospital extends Polymer.Element {
       static get is() { return 'fb-hospital'; }
+
+      ready() {
+        super.ready()
+
+        this.set('location', [
+          {
+            "id": 1,
+            "name": "Beacon Hospital",
+            "address": "No. 1, Jalan 215, Section 51, Off Jalan Templer Petaling Jaya Selangor 46050 Malaysia, Malaysia",
+            "image": "http://cdn.whatclinic.com/cosmetic-plastic-surgery/malaysia/kuala-lumpur/taman-oug/beacon-international-specialist-centre/thumbnails/086346d3c0781651/beacon_hospital.jpg?hmac=f66a4ccd4e560936a71612d1c8e03d80a1ae34cb"
+          },
+          {
+            "id": 2,
+            "name": "KPJ Sentosa KL Specialist Hospital",
+            "address": "36, Jalan Chemur Kompleks Damai Kuala Lumpur WP Kuala Lumpur 60400 Malaysia, Malaysia",
+            "image": "https://prodbookdoccom.s3.amazonaws.com/uploads/locations/clinic_main_photo_location/large_c899b3bab1.jpg"
+          },
+          {
+            "id": 3,
+            "name": "Hospital Fatimah",
+            "address": "1 Lebuh Chew Peng Loon Off Jalan Dato\u2019 Lau Pak Khuan Ipoh Garden Ipoh Perak 31400 Malaysia, Malaysia",
+            "image": "http://1.bp.blogspot.com/_OWhdrX10bSQ/RvvAOSvOY8I/AAAAAAAAC0I/9SJ6dG49yoU/s400/fatimah140st+a.jpg"
+          },
+          {
+            "id": 4,
+            "name": "Manipal Hospitals Klang",
+            "address": "Lot 83211,, Persiaran Batu Nilam, Bandar Bukit Tinggi, 41200 Klang, Selangor, Malaysia",
+            "image": "http://www.themalaysiantimes.com.my/wp-content/uploads/2016/07/Manipal_Hospitals_cropped.transformed.jpg"
+          },
+          {
+            "id": 5,
+            "name": "Pantai Hospital Ipoh",
+            "address": "126, Jalan Tambun Ipoh Perak 31400 Malaysia, Malaysia",
+            "image": "http://www.salud.asia/assets/files/employer/ph2__20160812131525.jpg"
+          },
+          {
+            "id": 6,
+            "name": "Gleneagles Kuala Lumpur",
+            "address": "Block A & Block B, 286 & 288, Jalan Ampang, 50450 Kuala Lumpur, Federal Territory of Kuala Lumpur, Malaysia",
+            "image": "http://www.mymedholiday.com/FileUpload/Multimedia/130326114605420.jpg"
+          }
+        ])
+
+      }
     }
 
     window.customElements.define(FbHospital.is, FbHospital);
