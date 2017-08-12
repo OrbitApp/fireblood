@@ -93,12 +93,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="home" href="[[rootPath]]home">Home</a>
-          <a name="hospital" href="[[rootPath]]hospital">Hospital</a>
-          <a name="request" href="[[rootPath]]request">Blood Request</a>
-          <a name="blood" href="[[rootPath]]blood">Blood</a>
-          <a name="history" href="[[rootPath]]history">History</a>
-          <a name="settings" href="[[rootPath]]settings">Settings</a>
+          <a name="home" href="[[rootPath]]home/">Home</a>
+          <a name="hospital" href="[[rootPath]]hospital/">Hospital</a>
+          <a name="settings" href="[[rootPath]]settings/">Profile / Settings</a>
+          <a name="request" href="[[rootPath]]request/">Blood Request (Hospital Only)</a>
+          <!-- <a name="blood" href="[[rootPath]]blood/">Blood</a>
+          <a name="history" href="[[rootPath]]history/">History</a> -->
         </iron-selector>
       </app-drawer>
 
@@ -118,7 +118,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <fb-landing name="landing"></fb-landing>
           <fb-blood name="blood"></fb-blood>
           <fb-history name="history"></fb-history>
-          <fb-hospital name="hospital"></fb-hospital>
+          <fb-hospital name="hospital" route="{{route}}"></fb-hospital>
           <fb-welcome name="welcome"></fb-welcome>
           <fb-request name="request"></fb-request>
           <fb-settings name="settings"></fb-settings>

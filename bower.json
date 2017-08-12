@@ -24,7 +24,8 @@
     "iron-meta": "PolymerElements/iron-meta#^2.0.2",
     "iron-menu-behavior": "PolymerElements/iron-menu-behavior#^2.0.1",
     "paper-item": "PolymerElements/paper-item#^2.0.0",
-    "iron-ajax": "PolymerElements/iron-ajax#^2.0.5"
+    "iron-ajax": "PolymerElements/iron-ajax#^2.0.5",
+    "google-map": "GoogleWebComponents/google-map#^2.0.1"
   },
   "resolutions": {
     "polymer": "^2.0.0"
